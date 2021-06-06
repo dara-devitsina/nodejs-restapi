@@ -6,6 +6,9 @@ const app = express();
 // use global environment variable if it's set otherwise use 3000
 const port = process.env.PORT || 3000;
 
+// midlware allowing to post and get JSON from endpoints
+app.use(express.json());
+
 app.get('/', (req, res) => {
 	res.send('Hello World');
 });
