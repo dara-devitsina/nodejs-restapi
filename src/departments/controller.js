@@ -47,11 +47,20 @@ const removeDepartment = (req, res) => {
 		if (noDeptFound) {
 			res.send('Depatment does not exists in the database');
 		}
-		pool.query(queries.removeDepartment, [id], (error, results) => {
-			if (error) throw error;
-			res.status(200).send('Department removed successfully');
+		else {
+			pool.query(queries.checkDeptHasEmployees, [id], (error, results) => {
+				const employeesFound = results.rows.length;
+				if (employeesFound) {
+					res.send('Depatment has employees, could not delete');
+				} else {
+					pool.query(queries.removeDepartment, [id], (error, results) => {
+						if (error) throw error;
+						res.status(200).send('Department removed successfully');
+					})
+				}
 		})
-	});
+		}
+	})
 };
 
 const updateDepartment = (req, res) => {
@@ -69,12 +78,12 @@ const updateDepartment = (req, res) => {
 			})
 		}
 	})
-}
+};
 
 module.exports = {
 	getDepartments,
 	getDepartmentById,
 	addDepartment,
 	removeDepartment,
-	updateDepartment
+	updateDepartment,
 };
