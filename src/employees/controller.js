@@ -1,71 +1,74 @@
 const pool = require('../../db');
 const queries = require('./queries');
 
-const getEmployees = (req, res) => {
-	pool.query(queries.getEmployees, (error, results) => {
-		if (error) throw error;
+const getEmployees = async (req, res) => {
+	try {
+		const results = await pool.query(queries.getEmployees)
 		res.status(200).json(results.rows);
-	})
+	} catch (error) {
+		throw error;
+	}
 };
 
-const getEmployeeById = (req, res) => {
+const getEmployeeById = async (req, res) => {
 	const id = parseInt(req.params.id);
-
-	pool.query(queries.getEmployeeById, [id], (error, results) => {
-		if (error) throw error;
+	try {
+		const results = await pool.query(queries.getEmployeeById, [id])
 		// if results.row array is empty that means no employee found
 		const noEmployeeFound = !results.rows.length;
-		if (noEmployeeFound) {
-			res.send('Employee does not exists in the database');
-		}
-		else {
-			res.status(200).json(results.rows);
-		}
-	})
+			if (noEmployeeFound) {
+				res.send('Employee does not exist in the database');
+			}
+			else {
+				res.status(200).json(results.rows);
+			}
+	} catch (error) {
+		throw error;
+	}
 };
 
-const addEmployee = (req, res) => {
-	const { dept_id, first_name, last_name } = req.body;
-	// add employee to db
-	pool.query(queries.addEmployee, [dept_id, first_name, last_name], (error, results) => {
-		if (error) throw error;
+const addEmployee = async (req, res) => {
+	try {
+		const { dept_id, first_name, last_name } = req.body;
+		await pool.query(queries.addEmployee, [dept_id, first_name, last_name]);
 		res.status(201).send('Employee created successfully');
-	})
+	} catch (error) {
+		throw error;
+	}
 };
 
-const removeEmployee = (req, res) => {
-	const id = parseInt(req.params.id);
-	pool.query(queries.getEmployeeById, [id], (error, results) => {
-		// if results.row array is empty that means no employee found
-		const noEmployeeFound = !results.rows.length;
+const removeEmployee = async (req, res) => {
+	try {
+		const id = parseInt(req.params.id);
+		const employee = await pool.query(queries.getEmployeeById, [id]);
+		const noEmployeeFound = !employee.rows.length;
 		if (noEmployeeFound) {
-			res.send('Employee does not exists in the database');
-		} 
-		else {
-			pool.query(queries.removeEmployee, [id], (error, results) => {
-				if (error) throw error;
-				res.status(200).send('Employee removed successfully');
-			})
+			res.send('Employee does not exist in the database');
+		} else {
+			await pool.query(queries.removeEmployee, [id]);
+			res.status(200).send('Employee removed successfully');
 		}
-	});
+	} catch (error) {
+		throw error;
+	}
 };
 
 // update or remove employee's department
-const updateEmployeeDept = (req, res) => {
-	const id = parseInt(req.params.id);
-	const { dept_id } = req.body;
-
-	pool.query(queries.getEmployeeById, [id], (error, results) => {
-		const noEmployeeFound = !results.rows.length;
+const updateEmployeeDept = async (req, res) => {
+	try {
+		const id = parseInt(req.params.id);
+		const { dept_id } = req.body;
+		const employee = await pool.query(queries.getEmployeeById, [id]);
+		const noEmployeeFound = !employee.rows.length;
 		if (noEmployeeFound) {
-			res.send('Employee does not exists in the database');
+			res.send('Employee does not exist in the database');
 		} else {
-			pool.query(queries.updateEmployeeDept, [dept_id, id], (error, results) => {
-				if (error) throw error;
-				res.status(200).send('Employee department updated successfully');
-			})
+			await pool.query(queries.updateEmployeeDept, [dept_id, id]);
+			res.status(200).send(`Employee's department updated successfully`);
 		}
-	})
+	} catch (error) {
+		throw error;
+	}
 };
 
 module.exports = {
