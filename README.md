@@ -7,8 +7,10 @@ Example of REST API for CRUD operation using PostgreSQL database. This API has f
 - Delete record from employees/departments table
 
 ## Run this app ##
-Clone this repo
-Create 'company' database in postgreSQL 
+Clone this repo  
+
+Create 'company' database in postgreSQL  
+
 To create 'departments' and 'employees' tables run the following command from this app folder:
 
 `psql -f company.sql company`
