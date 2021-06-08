@@ -17,7 +17,7 @@ const getEmployeeById = async (req, res) => {
 		// if results.row array is empty that means no employee found
 		const noEmployeeFound = !results.rows.length;
 			if (noEmployeeFound) {
-				res.send('Employee does not exist in the database');
+				res.status(404).send('Employee does not exist in the database');
 			}
 			else {
 				res.status(200).json(results.rows);
@@ -43,7 +43,7 @@ const removeEmployee = async (req, res) => {
 		const employee = await pool.query(queries.getEmployeeById, [id]);
 		const noEmployeeFound = !employee.rows.length;
 		if (noEmployeeFound) {
-			res.send('Employee does not exist in the database');
+			res.status(404).send('Employee does not exist in the database');
 		} else {
 			await pool.query(queries.removeEmployee, [id]);
 			res.status(200).send('Employee removed successfully');
@@ -61,12 +61,12 @@ const updateEmployeeDept = async (req, res) => {
 		const employee = await pool.query(queries.getEmployeeById, [id]);
 		const noEmployeeFound = !employee.rows.length;
 		if (noEmployeeFound) {
-			res.send('Employee does not exist in the database');
+			res.status(404).send('Employee does not exist in the database');
 		} else {
 			const dept = await pool.query(queries.checkDeptExists, [dept_id]);
 			const noDeptFound = !dept.rows.length;
 			if (noDeptFound) {
-				res.send('Department does not exist in the database');
+				res.status(404).send('Department does not exist in the database');
 			} else {
 				await pool.query(queries.updateEmployeeDept, [dept_id, id]);
 				res.status(200).send(`Employee's department updated successfully`);
