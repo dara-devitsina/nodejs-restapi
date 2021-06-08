@@ -63,8 +63,14 @@ const updateEmployeeDept = async (req, res) => {
 		if (noEmployeeFound) {
 			res.send('Employee does not exist in the database');
 		} else {
-			await pool.query(queries.updateEmployeeDept, [dept_id, id]);
-			res.status(200).send(`Employee's department updated successfully`);
+			const dept = await pool.query(queries.checkDeptExists, [dept_id]);
+			const noDeptFound = !dept.rows.length;
+			if (noDeptFound) {
+				res.send('Department does not exist in the database');
+			} else {
+				await pool.query(queries.updateEmployeeDept, [dept_id, id]);
+				res.status(200).send(`Employee's department updated successfully`);
+			}
 		}
 	} catch (error) {
 		throw error;

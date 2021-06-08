@@ -14,7 +14,7 @@ app.get('/', (req, res) => {
 	res.send('Hello World');
 });
 
-app.use('/api/v1/departments', departmentRoutes);
-app.use('/api/v1/employees', employeeRoutes);
+app.use('/api/departments', departmentRoutes);
+app.use('/api/employees', employeeRoutes);
 
 app.listen(port, () => console.log(`app listening on port ${port}`));
