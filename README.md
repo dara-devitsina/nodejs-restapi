@@ -3,7 +3,7 @@
 Example of REST API for CRUD operation using PostgreSQL database. This API has following features:
 - Get records/single record from employees/departments table
 - Add record into employees/departments table
-- Edit record in employees/departments table
+- Edit record in employees/departments table: update department name, update or remove (set to null) employee's department
 - Delete record from employees/departments table
 
 ## Run this app ##
