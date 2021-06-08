@@ -67,6 +67,7 @@ const removeDepartment = async (req, res) => {
 	}
 };
 
+// change department name
 const updateDepartment = async (req, res) => {
 	try {
 		const id = parseInt(req.params.id);
@@ -84,10 +85,36 @@ const updateDepartment = async (req, res) => {
 	}
 };
 
+// update or remove employee's department
+const updateEmployeeDept = async (req, res) => {
+	try {
+		const id = parseInt(req.params.id);
+		const { dept_id } = req.body;
+		const employee = await pool.query(queries.getEmployeeById, [id]);
+		const noEmployeeFound = !employee.rows.length;
+		if (noEmployeeFound) {
+			res.status(404).send('Employee does not exist in the database');
+		} else {
+			const dept = await pool.query(queries.getDepartmentById, [dept_id]);
+			// check if department exists in database (in case department id not null)
+			const deptFound = dept.rows.length || dept_id === null;
+			if (!deptFound) {
+				res.status(404).send('Department does not exist in the database');
+			} else {
+				await pool.query(queries.updateEmployeeDept, [dept_id, id]);
+				res.status(200).send(`Employee's department updated successfully`);
+			}
+		}
+	} catch (error) {
+		throw error;
+	}
+};
+
 module.exports = {
 	getDepartments,
 	getDepartmentById,
 	addDepartment,
 	removeDepartment,
 	updateDepartment,
+	updateEmployeeDept
 };
