@@ -1,8 +1,8 @@
-CREATE TABLE departments (
+CREATE TABLE IF NOT EXISTS departments (
     id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     dept_name VARCHAR(255));
 
-CREATE TABLE employees (
+CREATE TABLE IF NOT EXISTS employees (
     id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     dept_id bigint REFERENCES departments (id),
     first_name VARCHAR(255),
