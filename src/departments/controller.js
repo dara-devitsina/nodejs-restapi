@@ -20,7 +20,7 @@ const getDepartmentById = async (req, res) => {
 				res.send('Depatment does not exist in the database');
 			}
 			else {
-				res.status(200).json(results.rows);
+				res.status(200).json(result.rows);
 			}
 	} catch (error) {
 		throw error;
