@@ -9,5 +9,6 @@ router.get('/:id', controller.getDepartmentById);
 router.put('/:id', controller.updateDepartment);
 router.put('/employees/:id', controller.updateEmployeeDept);
 router.delete('/:id', controller.removeDepartment);
+router.delete('/employees/:id', controller.removeEmployeeFromDept);
 
 module.exports = router;
